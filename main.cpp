@@ -3,6 +3,7 @@
 #include <ctime>
 
 #include "write.h"
+// #include "capt.h"
 
 bool shifted = false;
 bool ctrled = false;
