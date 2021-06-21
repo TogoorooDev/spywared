@@ -56,24 +56,11 @@ bool check_chrome_running(){
     }
 
     do {
-        //write_endl(pe32.szExeFile, "history.txt");
         char filename[256];
-        //sprintf(filename, "%ws", pe32.szExeFile);
-
-        //int exe_len = std::wcslen(pe32.szExeFile);
-
-        //WideCharToMultiByte(CP_UTF8, WC_NO_BEST_FIT_CHARS, pe32.szExeFile, exe_len, filename, 256, "", NULL);
-        // WCHAR exe_name = "chrome.exe";
-        if (std::wcscmp(pe32.szExeFile, L"chrome.exe")){ 
-            write(pe32.szExeFile, "history.txt");
-            write_endl(" is not chrome.exe", "history.txt");
+        if (strcmp(pe32.szExeFile, L"chrome.exe")){ 
             return true;
             
-        }else {
-            write(filename, "history.txt");
-            write_endl(" is not chrome.exe", "history.txt");
         }
-
     }while (Process32Next(hProcessSnap, &pe32));
 
     CloseHandle(hProcessSnap);

