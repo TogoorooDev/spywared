@@ -3,8 +3,8 @@ CXXFLAGS = -Wall -Wextra -pedantic -std=c++17
 #klog.exe: main.o write.o chrome.o capt.o sqlite3.o
 #	g++ $(CXXFLAGS) main.o write.o chrome.o sqlite3.o -o klog.exe
 
-klog.exe: main.o write.o capt.o sqlite3.o
-	g++ $(CXXFLAGS) main.o write.o sqlite3.o -o klog.exe
+klog.exe: main.o write.o chrome.o capt.o sqlite3.o
+	g++ $(CXXFLAGS) main.o write.o chrome.o sqlite3.o -o klog.exe
 
 
 chrome.o: chrome.cpp chrome.h
