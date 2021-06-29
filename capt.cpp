@@ -3,6 +3,9 @@
 
 #include "write.h"
 
+#define CAPTURE_INTERVAL 5000 
+#define CAPTURE_FORMAT L"image/png"
+
 using namespace Gdiplus;
 
 int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
@@ -43,7 +46,7 @@ void file_export(HBITMAP bitmap){
 
     Gdiplus::Bitmap *img = new Gdiplus::Bitmap(bitmap, NULL);
     CLSID clsid;
-    int ret_val = GetEncoderClsid(L"image/png", &clsid);
+    int ret_val = GetEncoderClsid(CAPTURE_FORMAT, &clsid);
 
     img->Save(L"shot.png", &clsid, NULL);
     delete img;
