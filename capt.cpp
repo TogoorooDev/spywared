@@ -4,11 +4,12 @@
 #include <stdio.h>
 #include <string>
 #include <sstream>
+#include <thread>
 
 #include "write.h"
 
-#define CAPTURE_INTERVAL 500000 
-#define CAPTURE_FORMAT L"image/jpeg"
+#define CAPTURE_INTERVAL 60 // Interval in milliseconds
+#define CAPTURE_FORMAT L"image/jpeg" // Formats include image/bmp image/png and image/jpeg
 #define CAPTURE_PREFIX L"shot"
 #define CAPTURE_SUFFIX L".jpg"
 
@@ -100,6 +101,10 @@ void capture(){
 }
 
 void init_captured(){
-    capture();    
+    auto interval = std::chrono::seconds(CAPTURE_INTERVAL);
+    do {
+        capture();
+        std::this_thread::sleep_for(interval);
+    }while (1);
 
 }
