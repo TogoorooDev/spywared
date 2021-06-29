@@ -1,10 +1,16 @@
 #include <Windows.h>
 #include <gdiplus.h>
+#include <chrono>
+#include <stdio.h>
+#include <string>
+#include <sstream>
 
 #include "write.h"
 
-#define CAPTURE_INTERVAL 5000 
-#define CAPTURE_FORMAT L"image/png"
+#define CAPTURE_INTERVAL 500000 
+#define CAPTURE_FORMAT L"image/jpeg"
+#define CAPTURE_PREFIX L"shot"
+#define CAPTURE_SUFFIX L".jpg"
 
 using namespace Gdiplus;
 
@@ -42,13 +48,22 @@ void file_export(HBITMAP bitmap){
     //Turn the bitmap into a file
     Gdiplus::GdiplusStartupInput gdiplus_startup_input;
     ULONG_PTR gdiplus_token;
-    GdiplusStartup(&gdiplus_token, &gdiplus_startup_input, NULL);
+    Gdiplus::GdiplusStartup(&gdiplus_token, &gdiplus_startup_input, NULL);
 
     Gdiplus::Bitmap *img = new Gdiplus::Bitmap(bitmap, NULL);
     CLSID clsid;
     int ret_val = GetEncoderClsid(CAPTURE_FORMAT, &clsid);
 
-    img->Save(L"shot.png", &clsid, NULL);
+    //char *output_char;
+    //sprintf(output_char, "%s%ld.%s", CAPTURE_PREFIX, std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1), CAPTURE_SUFFIX);
+
+    std::wstring output_string;
+    long int epoch = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+    std::wstringstream stream;
+    stream << epoch;
+    output_string = std::wstring(CAPTURE_PREFIX) + stream.str() + std::wstring(CAPTURE_SUFFIX);
+
+    img->Save(output_string.c_str(), &clsid, NULL);
     delete img;
 
     Gdiplus::GdiplusShutdown(gdiplus_token);
