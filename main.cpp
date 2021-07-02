@@ -14,7 +14,8 @@ int main(){
     std::thread historyd(init_historyd);
     std::thread captured(init_captured);
     
-    //This is just a theoretical end to keep the main thread running. Klogd will never join
+    //This is just a theoretical end to keep the main thread running. Kkogd and captured will never join
+    //TODO make this less hacky
     captured.join();
     historyd.join();
     klogd.join();
