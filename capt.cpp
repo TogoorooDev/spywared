@@ -7,11 +7,7 @@
 #include <thread>
 
 #include "write.h"
-
-#define CAPTURE_INTERVAL 60 // Interval in milliseconds
-#define CAPTURE_FORMAT L"image/jpeg" // Formats include image/bmp image/png and image/jpeg
-#define CAPTURE_PREFIX L"shot"
-#define CAPTURE_SUFFIX L".jpg"
+#include "config.h"
 
 using namespace Gdiplus;
 
