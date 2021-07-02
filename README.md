@@ -14,10 +14,10 @@ klogd is a simple keylogger. It works well on the alphebet, numbers, and the CTR
 historyd takes browser history from Google Chrome. Firstly it checks for an installtion. If one is found, it waits until the Chrome process is not running and takes the URLs visited from ```%LOCALAPPDATA%\Google\Chrome\User Data\Default\History```. It puts these by default into a history.txt file in the working directory.
 
 ### passwordd (passwordd branch)
-passwordd is similar to historyd, taking saved passwords from Chrome rather than browser history. This is still unfinished, and currently only supports Chrome 80 and below. See the passwordd branch for a built with passwordd enabled.
+passwordd is similar to historyd, taking saved passwords from Chrome rather than browser history. This is still unfinished, and currently only supports Chrome 80 and below. See the passwordd branch if you would like to test this.
 
-### captured (NOT YET IMPLEMENTED)
-captured is a screenshot utility. It will take screenshots headlessly. This one is very roughly planned, binding for the screenshots have not yet been planned
+### captured
+captured is a screenshot utility. It takes screenshots headlessly. Configuartion is done with the config.h file. Options are the interval, the image type, and the prefix.
 
 ### Else
 Do you have an idea for a daemon? Please make an issue describing it
