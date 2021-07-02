@@ -1,6 +1,6 @@
 #ifndef CAPT_H
 #define CAPT_H
 
-void capture();
+void init_captured();
 
 #endif
